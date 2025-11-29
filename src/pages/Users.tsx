@@ -11,7 +11,6 @@ export const Users = () => {
   const [userTree, setUserTree] = useState<UserNode[]>([]);
   const user = getUser();
 
-
   useEffect(() => {
     const fetchData = async () => {
       const data = await fetchHierarchy();
@@ -23,16 +22,31 @@ export const Users = () => {
   }, []);
 
   return (
-    <div className="p-8">
-      <div className="flex justify-between mb-6">
-        <div className="text-2xl font-bold">Users Hierarchy</div>
-        <Button onClick={() => {
-          logout();
-          window.location.href = "/login";
-        }}>Logout</Button>
-      </div>
-      <div>{user?.firstName} {user?.lastName}</div>
+    <div className="p-4 sm:p-8">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 border-b">
+        <h2 className="pb-2 text-2xl sm:text-3xl font-semibold tracking-tight">
+          Users Hierarchy
+        </h2>
 
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 py-4 sm:py-0">
+          <h2 className="text-base sm:text-lg whitespace-nowrap">
+            {user?.firstName} {user?.lastName}
+          </h2>
+
+          <Button
+            className="bg-purple-600 text-white w-full sm:w-auto"
+            onClick={() => {
+              logout();
+              window.location.href = "/login";
+            }}
+          >
+            Logout
+          </Button>
+        </div>
+      </div>
+
+      {/* Content */}
       {userTree.length > 0 ? (
         <ul className="space-y-2">
           {userTree.map((root) => (
@@ -40,12 +54,10 @@ export const Users = () => {
           ))}
         </ul>
       ) : (
-        <div className="flex items-center justify-center min-h-[300px] w-full">
+        <div className="flex items-center justify-center min-h-[250px] w-full">
           <Spinner className="size-6 text-purple-600" />
         </div>
       )}
-
     </div>
   );
-}
-
+};

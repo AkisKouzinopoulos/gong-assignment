@@ -14,32 +14,46 @@ export const TreeNode = ({ user }: TreeNodeProps) => {
   const getInitials = `${user.firstName[0] || ""}${user.lastName[0] || ""}`;
 
   return (
-    <li className="ml-4">
-      <div className="flex items-center space-x-2">
+    <li>
+      <div className="flex items-start sm:items-center gap-3 my-3 flex-wrap">
         {isManager ? (
           <Button
             onClick={() => setExpanded(!expanded)}
-            variant="outline" className="rounded-full p-2" size="icon-sm" aria-label="Submit">
-
+            variant="outline"
+            size="icon-sm"
+            className="rounded-full p-2 shrink-0"
+            aria-label="Toggle"
+          >
             {expanded ? <Minus /> : <Plus />}
           </Button>
         ) : (
-          <span className="w-5 h-5 text-center">-</span>
+          <span className="w-5 h-5 text-center opacity-60">-</span>
         )}
 
-        <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 rounded-full bg-gray-400 flex items-center justify-center text-white text-sm">
-            {user.photo ? <img src={user.photo} alt={user.firstName} width="32" height="32" className="w-full h-full rounded-full" /> : getInitials}
+        <div className="flex items-center gap-4 flex-1 min-w-0">
+          <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gray-400 text-white text-md border border-purple-600 overflow-hidden shrink-0">
+            {user.photo ? (
+              <img
+                src={user.photo}
+                alt={user.firstName}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              getInitials
+            )}
           </div>
-          <div>
-            <div className="font-medium">{user.firstName} {user.lastName}</div>
-            <div className="text-sm text-gray-600">{user.email}</div>
+
+          <div className="min-w-0">
+            <div className="font-medium text-lg truncate">
+              {user.firstName} {user.lastName}
+            </div>
+            <div className="text-sm text-gray-500 truncate">{user.email}</div>
           </div>
         </div>
       </div>
 
-      {isManager && expanded && user.children.length > 0 && (
-        <ul className="ml-6 mt-1 space-y-1">
+      {isManager && expanded && (
+        <ul className="ml-5 sm:ml-8 mt-1 space-y-4 pl-2">
           {user.children.map((child) => (
             <TreeNode key={child.id} user={child} />
           ))}
@@ -47,4 +61,4 @@ export const TreeNode = ({ user }: TreeNodeProps) => {
       )}
     </li>
   );
-}
+};
