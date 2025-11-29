@@ -1,15 +1,32 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { encode } from '../utils/encode';
 import { fetchUserBySecret, fetchUserById } from '../services/firebase';
 import { saveUser } from '../services/auth';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { cn } from '@/lib/utils';
+import { AlertCircleIcon } from 'lucide-react';
 
 export const Login = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
 
-  async function handleLoginSubmit(e: React.FormEvent) {
+  const renderErrorAlert = error ? (
+    <Alert
+      variant="destructive"
+      className="mb-2 text-red-700"
+    >
+      <AlertCircleIcon />
+      <AlertTitle>Error</AlertTitle>
+      <AlertDescription>{error}</AlertDescription>
+    </Alert>
+  ) : null;
+
+  const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
@@ -17,19 +34,23 @@ export const Login = () => {
       const userId = await fetchUserBySecret(secret);
 
       if (!userId) {
-        alert('Invalid credentials');
+        setError('Invalid credentials');
         return;
       }
 
       const user = await fetchUserById(userId);
+      if (!user) {
+        setError('User not found');
+        return;
+      }
       saveUser(user);
 
-      window.location.href = '/users';
+      navigate('/users');
     } catch (err) {
       console.error(err);
-      alert('Something went wrong');
+      setError('Something went wrong');
     }
-  }
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -37,6 +58,7 @@ export const Login = () => {
         className="bg-white p-8 shadow-lg rounded-lg space-y-4 w-96"
         onSubmit={handleLoginSubmit}
       >
+        {renderErrorAlert}
         <h2 className="text-xl font-bold text-center">Please login</h2>
 
         <Input
@@ -56,7 +78,15 @@ export const Login = () => {
         />
 
         <div className="flex justify-end">
-          <Button className="bg-purple-600 text-white">Login</Button>
+          <Button
+            className={cn(
+              'bg-purple-600 text-white',
+              !email || !password ? 'opacity-50 cursor-not-allowed' : 'hover:bg-purple-700',
+            )}
+            disabled={!email || !password}
+          >
+            Login
+          </Button>
         </div>
       </form>
     </div>

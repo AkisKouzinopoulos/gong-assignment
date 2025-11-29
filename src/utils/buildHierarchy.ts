@@ -1,19 +1,19 @@
 import type { User, UserNode } from './types';
 
 export const buildHierarchy = (users: User[]): UserNode[] => {
-  const map = new Map<number, UserNode>();
-  const roots: UserNode[] = [];
+  const userMap = new Map<number, UserNode>();
+  const rootUsers: UserNode[] = [];
 
-  users.forEach((user) => map.set(user.id, { ...user, children: [] }));
+  users.forEach((user) => userMap.set(user.id, { ...user, children: [] }));
 
   users.forEach((user) => {
-    const node = map.get(user.id)!;
+    const node = userMap.get(user.id)!;
     if (user.managerId) {
-      map.get(user.managerId)?.children.push(node);
+      userMap.get(user.managerId)?.children.push(node);
     } else {
-      roots.push(node);
+      rootUsers.push(node);
     }
   });
 
-  return roots;
+  return rootUsers;
 };

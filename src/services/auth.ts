@@ -1,5 +1,5 @@
-// TODO: Implement proper type checking and validation for user data
-export function saveUser(user: unknown) {
+import type { User } from '../utils/types';
+export function saveUser(user: User) {
   localStorage.setItem('user', JSON.stringify(user));
 }
 

@@ -2,19 +2,25 @@ import { useEffect, useState } from 'react';
 import { fetchHierarchy } from '../services/firebase';
 import { TreeNode } from '../components/TreeNode/TreeNode';
 import type { UserNode } from '../utils/types';
-// import { Button } from "@/components/ui/button";
 import { Spinner } from '@/components/ui/spinner';
 import { buildHierarchy } from '@/utils/buildHierarchy';
 import { Header } from '@/components/Header/Header';
 
 export const Users = () => {
   const [userTree, setUserTree] = useState<UserNode[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await fetchHierarchy();
-      if (Array.isArray(data)) {
-        setUserTree(buildHierarchy(data));
+      try {
+        const data = await fetchHierarchy();
+        if (Array.isArray(data)) {
+          setUserTree(buildHierarchy(data));
+        } else {
+          setError('Failed to load user hierarchy.');
+        }
+      } catch (err) {
+        setError(`Failed to load user hierarchy. Error: ${(err as Error).message}`);
       }
     };
     fetchData();
@@ -25,7 +31,11 @@ export const Users = () => {
       <Header />
 
       {/* Tree content */}
-      {userTree.length > 0 ? (
+      {error ? (
+        <div className="flex items-center justify-center min-h-[250px] w-full">
+          <span className="text-red-600 font-semibold">{error}</span>
+        </div>
+      ) : userTree.length > 0 ? (
         <ul className="space-y-2">
           {userTree.map((root) => (
             <TreeNode

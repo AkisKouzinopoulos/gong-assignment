@@ -1,4 +1,4 @@
-import type { User } from '../pages/Users';
+import type { User } from '@/utils/types';
 
 const BASE_URL = 'https://gongfetest.firebaseio.com';
 

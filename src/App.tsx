@@ -11,7 +11,12 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={user ? <Navigate to="/users" /> : <Navigate to="/login" />}
+          element={
+            <Navigate
+              to={user ? '/users' : '/login'}
+              replace
+            />
+          }
         />
         <Route
           path="/login"
