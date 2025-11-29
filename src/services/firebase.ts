@@ -1,6 +1,6 @@
-import type { User } from "../pages/Users";
+import type { User } from '../pages/Users';
 
-const BASE_URL = "https://gongfetest.firebaseio.com";
+const BASE_URL = 'https://gongfetest.firebaseio.com';
 
 export async function fetchUserBySecret(secret: string) {
   const url = `${BASE_URL}/secrets/${secret}.json`;

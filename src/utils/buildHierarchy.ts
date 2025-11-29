@@ -1,4 +1,4 @@
-import type { User, UserNode } from "./types";
+import type { User, UserNode } from './types';
 
 export const buildHierarchy = (users: User[]): UserNode[] => {
   const map = new Map<number, UserNode>();
